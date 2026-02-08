@@ -6,14 +6,14 @@
     <title>HeartOS Ultimate</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
-        /* --- CSS: THE BEST OF BOTH WORLDS --- */
+        /* --- CSS: ORIGINAL STYLE (Just Scaled Down) --- */
         :root {
             --bg-color: #0f0f0f;
-            --accent: #ff0055; /* Love Pink */
-            --code-bg: #1e1e1e; /* VS Code Dark */
+            --accent: #ff0055; 
+            --code-bg: #1e1e1e; 
             --glass: rgba(20, 20, 20, 0.9);
             --border: rgba(255, 255, 255, 0.1);
-            --blue: #0A84FF; /* For Buttons */
+            --blue: #0A84FF; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Segoe UI', sans-serif; }
@@ -27,50 +27,52 @@
             align-items: center; justify-content: center; backdrop-filter: blur(15px);
         }
         .avatar {
-            width: 120px; height: 120px; border-radius: 50%; 
+            width: 100px; height: 100px; /* Reduced from 120px */
+            border-radius: 50%; 
             background: url('user.jpg') no-repeat center/cover;
             box-shadow: 0 0 20px rgba(0,0,0,0.5); margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);
         }
-        .user-name { font-size: 1.5rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
+        .user-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
         .password-box {
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); padding: 12px 20px;
-            border-radius: 20px; color: white; width: 280px; text-align: center;
-            font-size: 1rem; outline: none; transition: 0.3s;
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px;
+            border-radius: 20px; color: white; width: 260px; text-align: center;
+            font-size: 0.95rem; outline: none; transition: 0.3s;
         }
-        .password-box:focus { border-color: var(--accent); width: 320px; }
+        .password-box:focus { border-color: var(--accent); width: 300px; }
 
-        /* --- 2. SETUP SCREEN (The Questions) --- */
+        /* --- 2. SETUP SCREEN --- */
         #setup-screen {
             position: fixed; inset: 0; background: rgba(0,0,0,0.85);
             z-index: 4000; display: none;
             align-items: center; justify-content: center; backdrop-filter: blur(5px);
         }
         .dialog-box {
-            width: 500px; background: #1a1a1a; border-radius: 12px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7); padding: 30px;
+            width: 480px; /* Slightly smaller */
+            background: #1a1a1a; border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7); padding: 25px;
             border: 1px solid var(--border);
             display: none; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .dialog-box.active { display: block; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-        .dialog-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        .dialog-icon { font-size: 32px; }
-        .dialog-title { font-size: 1.2rem; font-weight: bold; }
-        .dialog-body { font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+        .dialog-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .dialog-icon { font-size: 28px; }
+        .dialog-title { font-size: 1.1rem; font-weight: bold; }
+        .dialog-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; opacity: 0.9; }
 
         /* Radio & Checkbox Styling */
         .radio-option {
-            display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05);
-            padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; border: 1px solid transparent; transition: 0.2s;
+            display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05);
+            padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; border: 1px solid transparent; transition: 0.2s;
         }
         .radio-option:hover { background: rgba(255,255,255,0.1); }
         .radio-option.selected { border-color: var(--blue); background: rgba(10, 132, 255, 0.1); }
-        input[type="radio"], input[type="checkbox"] { accent-color: var(--blue); transform: scale(1.2); }
+        input[type="radio"], input[type="checkbox"] { accent-color: var(--blue); transform: scale(1.1); }
 
         .btn-primary {
-            background: var(--blue); color: white; border: none; padding: 10px 20px;
-            border-radius: 6px; cursor: pointer; font-size: 1rem; width: 100%; transition: 0.2s;
+            background: var(--blue); color: white; border: none; padding: 8px 20px;
+            border-radius: 6px; cursor: pointer; font-size: 0.95rem; width: 100%; transition: 0.2s;
         }
         .btn-primary:disabled { background: #444; cursor: not-allowed; }
         .btn-primary:hover:not(:disabled) { background: #0062cc; }
@@ -79,57 +81,63 @@
         /* EXIT SCREEN */
         #exit-screen { position: fixed; inset: 0; background: black; z-index: 6000; display: none; align-items: center; justify-content: center; flex-direction: column; }
 
-        /* --- 3. DESKTOP (The Interface You Liked) --- */
+        /* --- 3. DESKTOP --- */
         #desktop {
             position: fixed; inset: 0;
             background: url('bg.png') no-repeat center center/cover;
-            display: none; /* Hidden until setup done */
+            display: none; 
             flex-direction: column;
         }
 
-        /* Desktop Icons Grid */
+        /* Desktop Icons */
         .desktop-icons {
             display: flex; flex-direction: column; flex-wrap: wrap;
-            height: 90vh; padding: 20px; gap: 20px; align-content: flex-start;
+            height: 85vh; padding: 20px; gap: 10px; align-content: flex-start;
         }
         .icon {
-            width: 90px; text-align: center; cursor: pointer;
-            padding: 10px; border-radius: 5px; transition: 0.2s;
+            width: 80px; text-align: center; cursor: pointer;
+            padding: 8px; border-radius: 5px; transition: 0.2s;
         }
         .icon:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
-        .icon span { font-size: 48px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
-        .icon p { font-size: 13px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
+        .icon span { font-size: 36px; /* Reduced from 48px */ display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .icon p { font-size: 12px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
 
         /* Draggable Windows */
         .window {
-            position: absolute; width: 600px; background: #1a1a1a;
+            position: absolute; 
+            width: 550px; /* Reduced from 600px */
+            background: #1a1a1a;
             border: 1px solid var(--border); border-radius: 8px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             display: none; flex-direction: column; overflow: hidden;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
+            max-height: 85vh; /* Prevents cutting off on small screens */
         }
         .title-bar {
-            background: #252526; padding: 8px 15px; display: flex;
+            background: #252526; padding: 6px 15px; display: flex;
             justify-content: space-between; align-items: center; cursor: grab;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #333; height: 35px;
         }
         .title-bar:active { cursor: grabbing; }
         .window-controls span { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 5px; cursor: pointer; }
         .close { background: #ff5f56; } .min { background: #ffbd2e; } .max { background: #27c93f; }
         .content { flex-grow: 1; overflow: auto; position: relative; }
 
-        /* App Styles */
-        #music-window { width: 350px; background: #121212; }
-        .cover-art { width: 100%; height: 300px; object-fit: cover; }
-        .player-ui { padding: 20px; text-align: center; color: white; }
+        /* App Styles - RESIZED FOR LAPTOP */
+        #music-window { width: 320px; background: #121212; }
+        .cover-art { width: 100%; height: 250px; /* Reduced from 300px */ object-fit: cover; }
+        .player-ui { padding: 15px; text-align: center; color: white; }
         
-        #vscode-window .content { background: var(--code-bg); color: #d4d4d4; font-family: 'Consolas', monospace; padding: 20px; }
+        #vscode-window { height: 450px; } /* Fixed height so it doesn't get cut */
+        #vscode-window .content { background: var(--code-bg); color: #d4d4d4; font-family: 'Consolas', monospace; padding: 20px; font-size: 13px; }
         .keyword { color: #c586c0; } .function { color: #dcdcaa; } .string { color: #ce9178; } .comment { color: #6a9955; }
+        
+        #video-window { width: 600px; height: 400px; } 
 
         /* Taskbar */
         .taskbar {
             position: absolute; bottom: 0; left: 0; right: 0;
-            height: 45px; background: rgba(20, 20, 20, 0.85);
+            height: 40px; background: rgba(20, 20, 20, 0.85);
             backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between;
             padding: 0 15px; border-top: 1px solid var(--border); z-index: 1000;
         }
@@ -419,3 +427,5 @@
     </script>
 </body>
 </html>
+
+
