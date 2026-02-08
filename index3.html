@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartOS Ultimate</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        /* --- CSS: THE BEST OF BOTH WORLDS --- */
+        :root {
+            --bg-color: #0f0f0f;
+            --accent: #ff0055; /* Love Pink */
+            --code-bg: #1e1e1e; /* VS Code Dark */
+            --glass: rgba(20, 20, 20, 0.9);
+            --border: rgba(255, 255, 255, 0.1);
+            --blue: #0A84FF; /* For Buttons */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Segoe UI', sans-serif; }
+        
+        body { background: black; color: white; height: 100vh; overflow: hidden; }
+
+        /* --- 1. LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; inset: 0; background: url('bg.png') no-repeat center center/cover;
+            z-index: 5000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; backdrop-filter: blur(15px);
+        }
+        .avatar {
+            width: 120px; height: 120px; border-radius: 50%; 
+            background: url('user.jpg') no-repeat center/cover;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5); margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);
+        }
+        .user-name { font-size: 1.5rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
+        .password-box {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); padding: 12px 20px;
+            border-radius: 20px; color: white; width: 280px; text-align: center;
+            font-size: 1rem; outline: none; transition: 0.3s;
+        }
+        .password-box:focus { border-color: var(--accent); width: 320px; }
+
+        /* --- 2. SETUP SCREEN (The Questions) --- */
+        #setup-screen {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            z-index: 4000; display: none;
+            align-items: center; justify-content: center; backdrop-filter: blur(5px);
+        }
+        .dialog-box {
+            width: 500px; background: #1a1a1a; border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7); padding: 30px;
+            border: 1px solid var(--border);
+            display: none; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .dialog-box.active { display: block; }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .dialog-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .dialog-icon { font-size: 32px; }
+        .dialog-title { font-size: 1.2rem; font-weight: bold; }
+        .dialog-body { font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+
+        /* Radio & Checkbox Styling */
+        .radio-option {
+            display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.05);
+            padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; border: 1px solid transparent; transition: 0.2s;
+        }
+        .radio-option:hover { background: rgba(255,255,255,0.1); }
+        .radio-option.selected { border-color: var(--blue); background: rgba(10, 132, 255, 0.1); }
+        input[type="radio"], input[type="checkbox"] { accent-color: var(--blue); transform: scale(1.2); }
+
+        .btn-primary {
+            background: var(--blue); color: white; border: none; padding: 10px 20px;
+            border-radius: 6px; cursor: pointer; font-size: 1rem; width: 100%; transition: 0.2s;
+        }
+        .btn-primary:disabled { background: #444; cursor: not-allowed; }
+        .btn-primary:hover:not(:disabled) { background: #0062cc; }
+        .btn-row { display: flex; gap: 10px; }
+
+        /* EXIT SCREEN */
+        #exit-screen { position: fixed; inset: 0; background: black; z-index: 6000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+
+        /* --- 3. DESKTOP (The Interface You Liked) --- */
+        #desktop {
+            position: fixed; inset: 0;
+            background: url('bg.png') no-repeat center center/cover;
+            display: none; /* Hidden until setup done */
+            flex-direction: column;
+        }
+
+        /* Desktop Icons Grid */
+        .desktop-icons {
+            display: flex; flex-direction: column; flex-wrap: wrap;
+            height: 90vh; padding: 20px; gap: 20px; align-content: flex-start;
+        }
+        .icon {
+            width: 90px; text-align: center; cursor: pointer;
+            padding: 10px; border-radius: 5px; transition: 0.2s;
+        }
+        .icon:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
+        .icon span { font-size: 48px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .icon p { font-size: 13px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
+
+        /* Draggable Windows */
+        .window {
+            position: absolute; width: 600px; background: #1a1a1a;
+            border: 1px solid var(--border); border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            display: none; flex-direction: column; overflow: hidden;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
+        .title-bar {
+            background: #252526; padding: 8px 15px; display: flex;
+            justify-content: space-between; align-items: center; cursor: grab;
+            border-bottom: 1px solid #333;
+        }
+        .title-bar:active { cursor: grabbing; }
+        .window-controls span { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 5px; cursor: pointer; }
+        .close { background: #ff5f56; } .min { background: #ffbd2e; } .max { background: #27c93f; }
+        .content { flex-grow: 1; overflow: auto; position: relative; }
+
+        /* App Styles */
+        #music-window { width: 350px; background: #121212; }
+        .cover-art { width: 100%; height: 300px; object-fit: cover; }
+        .player-ui { padding: 20px; text-align: center; color: white; }
+        
+        #vscode-window .content { background: var(--code-bg); color: #d4d4d4; font-family: 'Consolas', monospace; padding: 20px; }
+        .keyword { color: #c586c0; } .function { color: #dcdcaa; } .string { color: #ce9178; } .comment { color: #6a9955; }
+
+        /* Taskbar */
+        .taskbar {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 45px; background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 15px; border-top: 1px solid var(--border); z-index: 1000;
+        }
+        .start-btn { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 0.9rem; }
+        .tray { font-size: 0.8rem; color: #ccc; }
+
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="avatar"></div>
+        <div class="user-name">Gagan's Valentine</div>
+        <input type="password" id="password" class="password-box" placeholder="Enter Password">
+        <div class="hint">Hint: First message (small letters)</div>
+    </div>
+
+    <div id="setup-screen">
+        
+        <div class="dialog-box active" id="q1">
+            <div class="dialog-header">
+                <span class="dialog-icon">📊</span>
+                <div class="dialog-title">System Scan Report</div>
+            </div>
+            <div class="dialog-body">
+                System has scanned and Found Last 2 Years data(Memories, Fights, Laughter).<br>
+                Do you want to continue this journey further?
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label class="radio-option" onclick="selectRadio(this, 'btn-q1')">
+                    <input type="radio" name="q1" value="yes"> <span>Yes, Continue Journey</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio(this, 'btn-q1')">
+                    <input type="radio" name="q1" value="no"> <span>No, Exit from here</span>
+                </label>
+            </div>
+            <button id="btn-q1" class="btn-primary" onclick="handleQ1()" disabled>Next ></button>
+        </div>
+
+        <div class="dialog-box" id="q2">
+            <div class="dialog-header">
+                <span class="dialog-icon">⚠️</span>
+                <div class="dialog-title">Terms & Conditions</div>
+            </div>
+            <div class="dialog-body">
+                <strong>Warning:</strong> Ye ladki 'Garam Dimaag' aur 'Emotional Drama' ke saath aati hai.<br><br>
+                She loves you more than code, but needs regular attention updates.<br>
+                Can you handle her alongside your work?
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label class="radio-option">
+                    <input type="checkbox" id="terms-check" onclick="toggleQ2()">
+                    <span>I agree to handle the drama & love her.</span>
+                </label>
+            </div>
+            <button id="btn-q2" class="btn-primary" onclick="nextQ(2)" disabled>Agree & Continue</button>
+        </div>
+
+        <div class="dialog-box" id="q3">
+            <div class="dialog-header">
+                <span class="dialog-icon">❤️</span>
+                <div class="dialog-title">Final Proposal</div>
+            </div>
+            <div class="dialog-body" style="text-align: center; font-size: 1.1rem;">
+                Will you be my Valentine?
+            </div>
+            <div class="btn-row">
+                <button class="btn-primary" onclick="launchOS()">Yes, Locked In. 🔒</button>
+                <button class="btn-primary" style="background:#444; cursor:not-allowed;" disabled>Naah</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="exit-screen">
+        <h1 style="font-size: 3rem;">💔</h1>
+        <p style="font-size: 1.2rem; margin-top: 20px;">Okay, thanks for being part of my life.</p>
+    </div>
+
+    <div id="desktop">
+        
+        <div class="desktop-icons">
+            <div class="icon" ondblclick="openApp('video-window')">
+                <span class="material-icons-round" style="color: #4facfe;">folder</span>
+                <p>Our_Journal</p>
+            </div>
+            <div class="icon" ondblclick="openApp('vscode-window')">
+                <span class="material-icons-round" style="color: #007acc;">code</span>
+                <p>source_code.js</p>
+            </div>
+            <div class="icon" ondblclick="openApp('music-window')">
+                <span class="material-icons-round" style="color: #1db954;">music_note</span>
+                <p>Safar.mp3</p>
+            </div>
+            <div class="icon" ondblclick="trashAction()">
+                <span class="material-icons-round" style="color: #ff4d4d;">delete</span>
+                <p>Ego_Fights</p>
+            </div>
+        </div>
+
+        <div id="vscode-window" class="window draggable">
+            <div class="title-bar">
+                <div style="font-size: 12px;">source_code.js - Visual Studio Code</div>
+                <div class="window-controls"><span class="min"></span><span class="max"></span><span class="close" onclick="closeApp('vscode-window')"></span></div>
+            </div>
+            <div class="content">
+<pre>
+<span class="keyword">class</span> <span class="function">Relationship</span> {
+    <span class="keyword">constructor</span>() {
+        <span class="keyword">this</span>.me = <span class="string">"Clingy but Yours"</span>;
+        <span class="keyword">this</span>.you = <span class="string">"My Favorite Person"</span>;
+        <span class="keyword">this</span>.us = <span class="string">"Forever"</span>;
+    }
+
+    <span class="function">runDiagnostics</span>() {
+        <span class="comment">// Scanning memories from 2023-2026...</span>
+        <span class="comment">// 29 Oct: We matched</span>
+	<span class="comment">// 04 Nov: Meeting you inperson</span>
+	<span class="comment">// 05 Nov: We Clicked (Vibes Matched)</span>
+        <span class="comment">// 10 Nov: Dil De diya!!</span>
+	<span class="comment">// Forever Since Then.</span>
+        
+        <span class="keyword">if</span> (<span class="keyword">this</span>.fights > 0) {
+            <span class="variable">console</span>.log(<span class="string">"Deleting ego..."</span>);
+            <span class="keyword">return</span> <span class="string">"Love > Bugs"</span>;
+        }
+    }
+
+    <span class="comment">/* Note: I know I get emotional. 
+       But you are my best feature.
+       Keep chasing your dreams.
+       I'll handle the support tickets.
+       and I promise you am ready to 
+       grow with you.
+       ++ Change for Betterment of Both
+       Happy Valentine's Day! ❤️
+    */</span>
+}
+</pre>
+            </div>
+        </div>
+
+        <div id="video-window" class="window draggable">
+            <div class="title-bar">
+                <div style="font-size: 12px;">Media Player</div>
+                <div class="window-controls"><span class="close" onclick="closeApp('video-window')"></span></div>
+            </div>
+            <div class="content" style="background: black;">
+                <video controls style="width:100%; height:100%;">
+                    <source src="video.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+        <div id="music-window" class="window draggable">
+            <div class="title-bar">
+                <div style="font-size: 12px;">Spotify</div>
+                <div class="window-controls"><span class="close" onclick="closeApp('music-window')"></span></div>
+            </div>
+            <img src="cover.jpg" class="cover-art">
+            <div class="player-ui">
+                <h3 style="margin-bottom:5px;">Safar (The Journey)</h3>
+                <p style="font-size:12px; opacity:0.7; margin-bottom:15px;">Artist: Us</p>
+                <audio controls style="width:100%;">
+                    <source src="song.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+        </div>
+
+        <div class="taskbar">
+            <div class="start-btn">
+	    <span>Start</span>
+            <span class="material-icons-round" style="color:var(--accent);">favorite</span>
+	    <span class="material-icons-round task-icon">grid_view</span>
+            <span class="material-icons-round task-icon" onclick="openApp('vscode-window')">code</span>
+            <span class="material-icons-round task-icon" onclick="openApp('video-window')">movie</span>
+            <span class="material-icons-round task-icon" onclick="openApp('music-window')">music_note</span>
+            <div class="system-tray" id="clock">12:00 PM</div>
+            </div>
+            <div class="tray" id="clock">12:00 PM</div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- LOGIC ---
+
+        // 1. Password Logic
+        const passInput = document.getElementById('password');
+        passInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                if (passInput.value.toLowerCase().trim() === "let's get crazy together") {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('setup-screen').style.display = 'flex';
+                } else {
+                    passInput.style.border = "2px solid red";
+                }
+            }
+        });
+
+        // 2. Setup Questions Logic
+        
+        // Select Radio
+        function selectRadio(element, btnId) {
+            document.querySelectorAll('.radio-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById(btnId).disabled = false;
+        }
+
+        // Q1 Handler
+        function handleQ1() {
+            const val = document.querySelector('input[name="q1"]:checked').value;
+            if (val === 'yes') {
+                nextQ(1);
+            } else {
+                document.getElementById('setup-screen').style.display = 'none';
+                document.getElementById('exit-screen').style.display = 'flex';
+            }
+        }
+
+        // Q2 Checkbox Handler
+        function toggleQ2() {
+            const checked = document.getElementById('terms-check').checked;
+            document.getElementById('btn-q2').disabled = !checked;
+        }
+
+        // Next Slide
+        function nextQ(current) {
+            document.getElementById('q'+current).style.display = 'none';
+            document.getElementById('q'+(current+1)).classList.add('active');
+        }
+
+        // 3. Launch Desktop
+        function launchOS() {
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('desktop').style.display = 'flex';
+        }
+
+        // 4. Desktop Window Logic
+        let zIndex = 100;
+        
+        function openApp(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'flex';
+            win.style.zIndex = ++zIndex;
+            // Reset position slightly
+            win.style.top = '50%';
+            win.style.left = '50%';
+        }
+
+        function closeApp(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function trashAction() {
+            alert("Error 404: Ego not found.\n\nLove.exe has permanently deleted 'Past Fights'.");
+        }
+
+        // Dragging Logic
+        document.querySelectorAll('.draggable').forEach(win => {
+            const header = win.querySelector('.title-bar');
+            let isDragging = false, startX, startY, initialLeft, initialTop;
+
+            header.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX; startY = e.clientY;
+                initialLeft = win.offsetLeft; initialTop = win.offsetTop;
+                win.style.zIndex = ++zIndex;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    win.style.left = `${initialLeft + (e.clientX - startX)}px`;
+                    win.style.top = `${initialTop + (e.clientY - startY)}px`;
+                    win.style.transform = 'none'; 
+                }
+            });
+
+            document.addEventListener('mouseup', () => isDragging = false);
+        });
+
+        // Clock
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+
+    </script>
+</body>
+</html>
