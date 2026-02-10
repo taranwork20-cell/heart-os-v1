@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HeartOS Ultimate</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
-        /* --- CSS: ORIGINAL STYLE (Just Scaled Down) --- */
+        /* --- CSS: FIXED & OPTIMIZED --- */
         :root {
             --bg-color: #0f0f0f;
             --accent: #ff0055; 
             --code-bg: #1e1e1e; 
             --glass: rgba(20, 20, 20, 0.9);
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.15);
             --blue: #0A84FF; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Segoe UI', sans-serif; }
         
-        body { background: black; color: white; height: 100vh; overflow: hidden; }
+        body { background: black; color: white; height: 100vh; overflow: hidden; font-size: 14px; }
 
         /* --- 1. LOGIN SCREEN --- */
         #login-screen {
@@ -27,31 +27,46 @@
             align-items: center; justify-content: center; backdrop-filter: blur(15px);
         }
         .avatar {
-            width: 100px; height: 100px; /* Reduced from 120px */
+            width: 100px; height: 100px;
             border-radius: 50%; 
             background: url('user.jpg') no-repeat center/cover;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5); margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 25px rgba(0,0,0,0.6); margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.3);
         }
-        .user-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
+        .user-name { font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
+        
+        /* FIXED: Password Container with Button */
+        .password-container {
+            position: relative; width: 280px; display: flex; align-items: center;
+        }
         .password-box {
-            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px;
-            border-radius: 20px; color: white; width: 260px; text-align: center;
-            font-size: 0.95rem; outline: none; transition: 0.3s;
+            background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); padding: 12px 45px 12px 20px;
+            border-radius: 25px; color: white; width: 100%; text-align: center;
+            font-size: 1rem; outline: none; transition: 0.3s;
         }
-        .password-box:focus { border-color: var(--accent); width: 300px; }
+        .password-box:focus { border-color: var(--accent); background: rgba(0,0,0,0.8); }
+        
+        /* GO Button for Mobile */
+        .go-btn {
+            position: absolute; right: 5px;
+            background: var(--blue); border: none; color: white;
+            width: 32px; height: 32px; border-radius: 50%;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; z-index: 10;
+        }
 
         /* --- 2. SETUP SCREEN --- */
         #setup-screen {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
             z-index: 4000; display: none;
             align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            padding: 20px;
         }
         .dialog-box {
-            width: 480px; /* Slightly smaller */
+            width: 100%; max-width: 450px;
             background: #1a1a1a; border-radius: 12px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.7); padding: 25px;
             border: 1px solid var(--border);
-            display: none; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none; animation: popIn 0.3s ease;
         }
         .dialog-box.active { display: block; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -61,89 +76,76 @@
         .dialog-title { font-size: 1.1rem; font-weight: bold; }
         .dialog-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; opacity: 0.9; }
 
-        /* Radio & Checkbox Styling */
         .radio-option {
             display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05);
-            padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px; border: 1px solid transparent; transition: 0.2s;
+            padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 8px; border: 1px solid transparent; transition: 0.2s;
         }
-        .radio-option:hover { background: rgba(255,255,255,0.1); }
         .radio-option.selected { border-color: var(--blue); background: rgba(10, 132, 255, 0.1); }
         input[type="radio"], input[type="checkbox"] { accent-color: var(--blue); transform: scale(1.1); }
 
         .btn-primary {
-            background: var(--blue); color: white; border: none; padding: 8px 20px;
-            border-radius: 6px; cursor: pointer; font-size: 0.95rem; width: 100%; transition: 0.2s;
+            background: var(--blue); color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 1rem; width: 100%; transition: 0.2s;
         }
         .btn-primary:disabled { background: #444; cursor: not-allowed; }
-        .btn-primary:hover:not(:disabled) { background: #0062cc; }
         .btn-row { display: flex; gap: 10px; }
 
-        /* EXIT SCREEN */
         #exit-screen { position: fixed; inset: 0; background: black; z-index: 6000; display: none; align-items: center; justify-content: center; flex-direction: column; }
 
         /* --- 3. DESKTOP --- */
         #desktop {
-            position: fixed; inset: 0;
-            background: url('bg.png') no-repeat center center/cover;
-            display: none; 
-            flex-direction: column;
+            position: fixed; inset: 0; background: url('bg.png') no-repeat center center/cover;
+            display: none; flex-direction: column;
         }
 
-        /* Desktop Icons */
         .desktop-icons {
             display: flex; flex-direction: column; flex-wrap: wrap;
-            height: 85vh; padding: 20px; gap: 10px; align-content: flex-start;
+            height: 80vh; padding: 20px; gap: 15px; align-content: flex-start;
         }
-        .icon {
-            width: 80px; text-align: center; cursor: pointer;
-            padding: 8px; border-radius: 5px; transition: 0.2s;
-        }
+        .icon { width: 80px; text-align: center; cursor: pointer; padding: 8px; border-radius: 5px; }
         .icon:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
-        .icon span { font-size: 36px; /* Reduced from 48px */ display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .icon span { font-size: 36px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
         .icon p { font-size: 12px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
 
-        /* Draggable Windows */
+        /* Windows */
         .window {
-            position: absolute; 
-            width: 550px; /* Reduced from 600px */
-            background: #1a1a1a;
-            border: 1px solid var(--border); border-radius: 8px;
+            position: absolute; width: 90%; max-width: 550px;
+            background: #1a1a1a; border: 1px solid var(--border); border-radius: 8px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.8);
             display: none; flex-direction: column; overflow: hidden;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
-            max-height: 85vh; /* Prevents cutting off on small screens */
+            max-height: 80vh;
         }
         .title-bar {
-            background: #252526; padding: 6px 15px; display: flex;
+            background: #252526; padding: 8px 12px; display: flex;
             justify-content: space-between; align-items: center; cursor: grab;
-            border-bottom: 1px solid #333; height: 35px;
+            border-bottom: 1px solid #333; font-size: 0.8rem; height: 40px;
         }
-        .title-bar:active { cursor: grabbing; }
-        .window-controls span { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-left: 5px; cursor: pointer; }
-        .close { background: #ff5f56; } .min { background: #ffbd2e; } .max { background: #27c93f; }
         .content { flex-grow: 1; overflow: auto; position: relative; }
 
-        /* App Styles - RESIZED FOR LAPTOP */
-        #music-window { width: 320px; background: #121212; }
-        .cover-art { width: 100%; height: 250px; /* Reduced from 300px */ object-fit: cover; }
+        /* App Specifics */
+        #music-window { width: 300px; background: #121212; }
+        .cover-art { width: 100%; height: 250px; object-fit: cover; }
         .player-ui { padding: 15px; text-align: center; color: white; }
         
-        #vscode-window { height: 450px; } /* Fixed height so it doesn't get cut */
-        #vscode-window .content { background: var(--code-bg); color: #d4d4d4; font-family: 'Consolas', monospace; padding: 20px; font-size: 13px; }
-        .keyword { color: #c586c0; } .function { color: #dcdcaa; } .string { color: #ce9178; } .comment { color: #6a9955; }
-        
-        #video-window { width: 600px; height: 400px; } 
-
-        /* Taskbar */
-        .taskbar {
-            position: absolute; bottom: 0; left: 0; right: 0;
-            height: 40px; background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; border-top: 1px solid var(--border); z-index: 1000;
+        #vscode-window { height: 450px; }
+        /* FIX: Pre-wrap makes code go to next line instead of cutting off */
+        #vscode-window .content { 
+            background: var(--code-bg); color: #d4d4d4; 
+            font-family: 'Consolas', monospace; padding: 15px; font-size: 13px; 
+            white-space: pre-wrap; /* Crucial Fix */
+            word-wrap: break-word;
         }
-        .start-btn { display: flex; align-items: center; gap: 5px; font-weight: bold; font-size: 0.9rem; }
-        .tray { font-size: 0.8rem; color: #ccc; }
+        .keyword { color: #c586c0; } .function { color: #dcdcaa; } .string { color: #ce9178; } .comment { color: #6a9955; }
 
+        .taskbar {
+            position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
+            background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; border-top: 1px solid var(--border); z-index: 1000;
+        }
+        .start-btn { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; cursor: pointer;}
+        
     </style>
 </head>
 <body>
@@ -151,8 +153,13 @@
     <div id="login-screen">
         <div class="avatar"></div>
         <div class="user-name">Gagan's Valentine</div>
-        <input type="password" id="password" class="password-box" placeholder="Enter Password">
-        <div class="hint">Hint: First message (small letters)</div>
+        
+        <div class="password-container">
+            <input type="password" id="password" class="password-box" placeholder="Enter Password">
+            <button class="go-btn" onclick="checkPass()">➜</button>
+        </div>
+        
+        <div style="margin-top: 15px; font-size: 0.8rem; opacity: 0.7;">Hint: First message (small letters)</div>
     </div>
 
     <div id="setup-screen">
@@ -220,19 +227,19 @@
     <div id="desktop">
         
         <div class="desktop-icons">
-            <div class="icon" ondblclick="openApp('video-window')">
+            <div class="icon" onclick="openApp('video-window')">
                 <span class="material-icons-round" style="color: #4facfe;">folder</span>
                 <p>Our_Journal</p>
             </div>
-            <div class="icon" ondblclick="openApp('vscode-window')">
+            <div class="icon" onclick="openApp('vscode-window')">
                 <span class="material-icons-round" style="color: #007acc;">code</span>
                 <p>source_code.js</p>
             </div>
-            <div class="icon" ondblclick="openApp('music-window')">
+            <div class="icon" onclick="openApp('music-window')">
                 <span class="material-icons-round" style="color: #1db954;">music_note</span>
                 <p>Safar.mp3</p>
             </div>
-            <div class="icon" ondblclick="trashAction()">
+            <div class="icon" onclick="trashAction()">
                 <span class="material-icons-round" style="color: #ff4d4d;">delete</span>
                 <p>Ego_Fights</p>
             </div>
@@ -241,7 +248,7 @@
         <div id="vscode-window" class="window draggable">
             <div class="title-bar">
                 <div style="font-size: 12px;">source_code.js - Visual Studio Code</div>
-                <div class="window-controls"><span class="min"></span><span class="max"></span><span class="close" onclick="closeApp('vscode-window')"></span></div>
+                <div class="window-controls"><span class="close" onclick="closeApp('vscode-window')"></span></div>
             </div>
             <div class="content">
 <pre>
@@ -255,10 +262,10 @@
     <span class="function">runDiagnostics</span>() {
         <span class="comment">// Scanning memories from 2023-2026...</span>
         <span class="comment">// 29 Oct: We matched</span>
-	<span class="comment">// 04 Nov: Meeting you inperson</span>
-	<span class="comment">// 05 Nov: We Clicked (Vibes Matched)</span>
+        <span class="comment">// 04 Nov: Meeting you inperson</span>
+        <span class="comment">// 05 Nov: We Clicked (Vibes Matched)</span>
         <span class="comment">// 10 Nov: Dil De diya!!</span>
-	<span class="comment">// Forever Since Then.</span>
+        <span class="comment">// Forever Since Then.</span>
         
         <span class="keyword">if</span> (<span class="keyword">this</span>.fights > 0) {
             <span class="variable">console</span>.log(<span class="string">"Deleting ego..."</span>);
@@ -309,13 +316,8 @@
 
         <div class="taskbar">
             <div class="start-btn">
-	    <span>Start</span>
-            <span class="material-icons-round" style="color:var(--accent);">favorite</span>
-	    <span class="material-icons-round task-icon">grid_view</span>
-            <span class="material-icons-round task-icon" onclick="openApp('vscode-window')">code</span>
-            <span class="material-icons-round task-icon" onclick="openApp('video-window')">movie</span>
-            <span class="material-icons-round task-icon" onclick="openApp('music-window')">music_note</span>
-            <div class="system-tray" id="clock">12:00 PM</div>
+                <span class="material-icons-round" style="color:var(--accent);">favorite</span>
+                <span>Start</span>
             </div>
             <div class="tray" id="clock">12:00 PM</div>
         </div>
@@ -324,102 +326,97 @@
 
     <script>
         // --- LOGIC ---
+        
+        // 1. Password Check (Button + Enter Key)
+        function checkPass() {
+            const passInput = document.getElementById('password');
+            if (passInput.value.toLowerCase().trim() === "let's get crazy together") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('setup-screen').style.display = 'flex';
+            } else {
+                passInput.style.border = "2px solid red";
+            }
+        }
 
-        // 1. Password Logic
         const passInput = document.getElementById('password');
         passInput.addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') {
-                if (passInput.value.toLowerCase().trim() === "let's get crazy together") {
-                    document.getElementById('login-screen').style.display = 'none';
-                    document.getElementById('setup-screen').style.display = 'flex';
-                } else {
-                    passInput.style.border = "2px solid red";
-                }
-            }
+            if (e.key === 'Enter') checkPass();
         });
 
         // 2. Setup Questions Logic
-        
-        // Select Radio
         function selectRadio(element, btnId) {
             document.querySelectorAll('.radio-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
             document.getElementById(btnId).disabled = false;
         }
 
-        // Q1 Handler
         function handleQ1() {
             const val = document.querySelector('input[name="q1"]:checked').value;
-            if (val === 'yes') {
-                nextQ(1);
-            } else {
+            if (val === 'yes') { nextQ(1); } 
+            else { 
                 document.getElementById('setup-screen').style.display = 'none';
                 document.getElementById('exit-screen').style.display = 'flex';
             }
         }
 
-        // Q2 Checkbox Handler
         function toggleQ2() {
             const checked = document.getElementById('terms-check').checked;
             document.getElementById('btn-q2').disabled = !checked;
         }
 
-        // Next Slide
         function nextQ(current) {
             document.getElementById('q'+current).style.display = 'none';
             document.getElementById('q'+(current+1)).classList.add('active');
         }
 
-        // 3. Launch Desktop
         function launchOS() {
             document.getElementById('setup-screen').style.display = 'none';
             document.getElementById('desktop').style.display = 'flex';
         }
 
-        // 4. Desktop Window Logic
+        // 3. Desktop Logic
         let zIndex = 100;
-        
         function openApp(id) {
             const win = document.getElementById(id);
-            win.style.display = 'flex';
-            win.style.zIndex = ++zIndex;
-            // Reset position slightly
-            win.style.top = '50%';
-            win.style.left = '50%';
+            win.style.display = 'flex'; win.style.zIndex = ++zIndex;
+            win.style.top = '50%'; win.style.left = '50%';
         }
+        function closeApp(id) { document.getElementById(id).style.display = 'none'; }
+        function trashAction() { alert("Error 404: Ego not found.\n\nLove.exe has permanently deleted 'Past Fights'."); }
 
-        function closeApp(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        function trashAction() {
-            alert("Error 404: Ego not found.\n\nLove.exe has permanently deleted 'Past Fights'.");
-        }
-
-        // Dragging Logic
+        // Dragging
         document.querySelectorAll('.draggable').forEach(win => {
             const header = win.querySelector('.title-bar');
             let isDragging = false, startX, startY, initialLeft, initialTop;
-
             header.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.clientX; startY = e.clientY;
+                isDragging = true; startX = e.clientX; startY = e.clientY;
                 initialLeft = win.offsetLeft; initialTop = win.offsetTop;
                 win.style.zIndex = ++zIndex;
             });
-
             document.addEventListener('mousemove', (e) => {
                 if (isDragging) {
                     win.style.left = `${initialLeft + (e.clientX - startX)}px`;
                     win.style.top = `${initialTop + (e.clientY - startY)}px`;
-                    win.style.transform = 'none'; 
                 }
             });
-
             document.addEventListener('mouseup', () => isDragging = false);
+            
+            // Touch support for mobile dragging
+            header.addEventListener('touchstart', (e) => {
+                isDragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+                initialLeft = win.offsetLeft; initialTop = win.offsetTop;
+                win.style.zIndex = ++zIndex;
+            });
+            document.addEventListener('touchmove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    win.style.left = `${initialLeft + (e.touches[0].clientX - startX)}px`;
+                    win.style.top = `${initialTop + (e.touches[0].clientY - startY)}px`;
+                }
+            }, { passive: false });
+            document.addEventListener('touchend', () => isDragging = false);
         });
 
-        // Clock
         setInterval(() => {
             document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
@@ -427,5 +424,3 @@
     </script>
 </body>
 </html>
-
-
