@@ -6,7 +6,7 @@
     <title>HeartOS Ultimate</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <style>
-        /* --- CSS: FIXED & OPTIMIZED --- */
+        /* --- CSS: PERFECTED UI --- */
         :root {
             --bg-color: #0f0f0f;
             --accent: #ff0055; 
@@ -27,14 +27,19 @@
             align-items: center; justify-content: center; backdrop-filter: blur(15px);
         }
         .avatar {
-            width: 100px; height: 100px;
+            width: 110px; height: 110px;
             border-radius: 50%; 
-            background: url('user.jpg') no-repeat center/cover;
-            box-shadow: 0 0 25px rgba(0,0,0,0.6); margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.3);
+            /* FORCE LOAD IMAGE */
+            background-image: url('user.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #333; /* Fallback color if image fails */
+            box-shadow: 0 0 25px rgba(0,0,0,0.6); margin-bottom: 20px; border: 3px solid rgba(255,255,255,0.2);
         }
-        .user-name { font-size: 1.3rem; font-weight: 600; margin-bottom: 15px; text-shadow: 0 2px 4px black; }
+        .user-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-shadow: 0 2px 4px black; }
         
-        /* FIXED: Password Container with Button */
+        /* Password Container with Button */
         .password-container {
             position: relative; width: 280px; display: flex; align-items: center;
         }
@@ -45,7 +50,7 @@
         }
         .password-box:focus { border-color: var(--accent); background: rgba(0,0,0,0.8); }
         
-        /* GO Button for Mobile */
+        /* GO Button */
         .go-btn {
             position: absolute; right: 5px;
             background: var(--blue); border: none; color: white;
@@ -56,7 +61,7 @@
 
         /* --- 2. SETUP SCREEN --- */
         #setup-screen {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
             z-index: 4000; display: none;
             align-items: center; justify-content: center; backdrop-filter: blur(5px);
             padding: 20px;
@@ -74,7 +79,7 @@
         .dialog-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .dialog-icon { font-size: 28px; }
         .dialog-title { font-size: 1.1rem; font-weight: bold; }
-        .dialog-body { font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px; opacity: 0.9; }
+        .dialog-body { font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px; opacity: 0.9; }
 
         .radio-option {
             display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.05);
@@ -84,7 +89,7 @@
         input[type="radio"], input[type="checkbox"] { accent-color: var(--blue); transform: scale(1.1); }
 
         .btn-primary {
-            background: var(--blue); color: white; border: none; padding: 10px 20px;
+            background: var(--blue); color: white; border: none; padding: 12px;
             border-radius: 8px; cursor: pointer; font-size: 1rem; width: 100%; transition: 0.2s;
         }
         .btn-primary:disabled { background: #444; cursor: not-allowed; }
@@ -100,51 +105,62 @@
 
         .desktop-icons {
             display: flex; flex-direction: column; flex-wrap: wrap;
-            height: 80vh; padding: 20px; gap: 15px; align-content: flex-start;
+            height: 80vh; padding: 20px; gap: 20px; align-content: flex-start;
         }
-        .icon { width: 80px; text-align: center; cursor: pointer; padding: 8px; border-radius: 5px; }
+        .icon { width: 85px; text-align: center; cursor: pointer; padding: 10px; border-radius: 8px; }
         .icon:hover { background: rgba(255,255,255,0.1); backdrop-filter: blur(5px); }
-        .icon span { font-size: 36px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
-        .icon p { font-size: 12px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
+        .icon span { font-size: 40px; display: block; margin-bottom: 5px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); }
+        .icon p { font-size: 13px; text-shadow: 0 1px 3px black; margin: 0; font-weight: 500; }
 
-        /* Windows */
+        /* Windows Common Style */
         .window {
             position: absolute; width: 90%; max-width: 550px;
-            background: #1a1a1a; border: 1px solid var(--border); border-radius: 8px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            background: #1e1e1e; border: 1px solid var(--border); border-radius: 10px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.8);
             display: none; flex-direction: column; overflow: hidden;
             top: 50%; left: 50%; transform: translate(-50%, -50%);
-            max-height: 80vh;
+            max-height: 85vh;
         }
+        
+        /* FIXED: Mac Style Title Bar */
         .title-bar {
-            background: #252526; padding: 8px 12px; display: flex;
-            justify-content: space-between; align-items: center; cursor: grab;
-            border-bottom: 1px solid #333; font-size: 0.8rem; height: 40px;
+            background: #2d2d2d; padding: 0 15px; height: 38px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: grab; border-bottom: 1px solid #333;
         }
+        .title-bar:active { cursor: grabbing; }
+        
+        .window-title { font-size: 0.85rem; font-weight: 500; opacity: 0.8; }
+        
+        /* THE 3 DOTS (Traffic Lights) */
+        .window-controls { display: flex; gap: 8px; }
+        .control-btn { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
+        .close { background: #FF5F57; border: 1px solid #E0443E; }
+        .min { background: #FEBC2E; border: 1px solid #D89E24; }
+        .max { background: #28C840; border: 1px solid #1AAB29; }
+
         .content { flex-grow: 1; overflow: auto; position: relative; }
 
         /* App Specifics */
-        #music-window { width: 300px; background: #121212; }
-        .cover-art { width: 100%; height: 250px; object-fit: cover; }
+        #music-window { width: 320px; background: #121212; }
+        .cover-art { width: 100%; height: 280px; object-fit: cover; }
         .player-ui { padding: 15px; text-align: center; color: white; }
         
         #vscode-window { height: 450px; }
-        /* FIX: Pre-wrap makes code go to next line instead of cutting off */
         #vscode-window .content { 
             background: var(--code-bg); color: #d4d4d4; 
-            font-family: 'Consolas', monospace; padding: 15px; font-size: 13px; 
-            white-space: pre-wrap; /* Crucial Fix */
-            word-wrap: break-word;
+            font-family: 'Consolas', monospace; padding: 20px; font-size: 13px; 
+            white-space: pre-wrap; word-wrap: break-word; /* Prevents text cutting */
         }
         .keyword { color: #c586c0; } .function { color: #dcdcaa; } .string { color: #ce9178; } .comment { color: #6a9955; }
 
         .taskbar {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 50px;
+            position: absolute; bottom: 0; left: 0; right: 0; height: 45px;
             background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; border-top: 1px solid var(--border); z-index: 1000;
         }
-        .start-btn { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; cursor: pointer;}
+        .start-btn { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; }
         
     </style>
 </head>
@@ -163,14 +179,13 @@
     </div>
 
     <div id="setup-screen">
-        
         <div class="dialog-box active" id="q1">
             <div class="dialog-header">
                 <span class="dialog-icon">📊</span>
                 <div class="dialog-title">System Scan Report</div>
             </div>
             <div class="dialog-body">
-                System has scanned and Found Last 2 Years data(Memories, Fights, Laughter).<br>
+                System has scanned and found Last 2 Years data (Memories, Fights, Laughter).<br>
                 Do you want to continue this journey further?
             </div>
             <div style="margin-bottom: 20px;">
@@ -216,7 +231,6 @@
                 <button class="btn-primary" style="background:#444; cursor:not-allowed;" disabled>Naah</button>
             </div>
         </div>
-
     </div>
 
     <div id="exit-screen">
@@ -247,8 +261,12 @@
 
         <div id="vscode-window" class="window draggable">
             <div class="title-bar">
-                <div style="font-size: 12px;">source_code.js - Visual Studio Code</div>
-                <div class="window-controls"><span class="close" onclick="closeApp('vscode-window')"></span></div>
+                <div class="window-title">source_code.js - Visual Studio Code</div>
+                <div class="window-controls">
+                    <div class="control-btn close" onclick="closeApp('vscode-window')"></div>
+                    <div class="control-btn min"></div>
+                    <div class="control-btn max"></div>
+                </div>
             </div>
             <div class="content">
 <pre>
@@ -289,8 +307,12 @@
 
         <div id="video-window" class="window draggable">
             <div class="title-bar">
-                <div style="font-size: 12px;">Media Player</div>
-                <div class="window-controls"><span class="close" onclick="closeApp('video-window')"></span></div>
+                <div class="window-title">Media Player</div>
+                <div class="window-controls">
+                    <div class="control-btn close" onclick="closeApp('video-window')"></div>
+                    <div class="control-btn min"></div>
+                    <div class="control-btn max"></div>
+                </div>
             </div>
             <div class="content" style="background: black;">
                 <video controls style="width:100%; height:100%;">
@@ -301,8 +323,12 @@
 
         <div id="music-window" class="window draggable">
             <div class="title-bar">
-                <div style="font-size: 12px;">Spotify</div>
-                <div class="window-controls"><span class="close" onclick="closeApp('music-window')"></span></div>
+                <div class="window-title">Spotify</div>
+                <div class="window-controls">
+                    <div class="control-btn close" onclick="closeApp('music-window')"></div>
+                    <div class="control-btn min"></div>
+                    <div class="control-btn max"></div>
+                </div>
             </div>
             <img src="cover.jpg" class="cover-art">
             <div class="player-ui">
@@ -326,8 +352,8 @@
 
     <script>
         // --- LOGIC ---
-        
-        // 1. Password Check (Button + Enter Key)
+
+        // 1. Password Logic (Go Button + Enter)
         function checkPass() {
             const passInput = document.getElementById('password');
             if (passInput.value.toLowerCase().trim() === "let's get crazy together") {
@@ -343,7 +369,7 @@
             if (e.key === 'Enter') checkPass();
         });
 
-        // 2. Setup Questions Logic
+        // 2. Setup Logic
         function selectRadio(element, btnId) {
             document.querySelectorAll('.radio-option').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
@@ -384,10 +410,12 @@
         function closeApp(id) { document.getElementById(id).style.display = 'none'; }
         function trashAction() { alert("Error 404: Ego not found.\n\nLove.exe has permanently deleted 'Past Fights'."); }
 
-        // Dragging
+        // Dragging Logic
         document.querySelectorAll('.draggable').forEach(win => {
             const header = win.querySelector('.title-bar');
             let isDragging = false, startX, startY, initialLeft, initialTop;
+            
+            // Mouse
             header.addEventListener('mousedown', (e) => {
                 isDragging = true; startX = e.clientX; startY = e.clientY;
                 initialLeft = win.offsetLeft; initialTop = win.offsetTop;
@@ -400,8 +428,8 @@
                 }
             });
             document.addEventListener('mouseup', () => isDragging = false);
-            
-            // Touch support for mobile dragging
+
+            // Touch
             header.addEventListener('touchstart', (e) => {
                 isDragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY;
                 initialLeft = win.offsetLeft; initialTop = win.offsetTop;
