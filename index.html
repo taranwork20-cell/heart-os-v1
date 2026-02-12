@@ -14,6 +14,7 @@
             --glass: rgba(20, 20, 20, 0.9);
             --border: rgba(255, 255, 255, 0.15);
             --blue: #0A84FF; 
+            --red: #FF453A;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; font-family: 'Segoe UI', sans-serif; }
@@ -27,14 +28,14 @@
             align-items: center; justify-content: center; backdrop-filter: blur(15px);
         }
         .avatar {
-            width: 100px; height: 100px;
+            width: 110px; height: 110px;
             border-radius: 50%; 
-            /* EXACT MATCH FOR YOUR FILE */
+            /* EXACT MATCH FOR GITHUB FILE */
             background-image: url('profile.JPG');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            box-shadow: 0 0 25px rgba(0,0,0,0.6); margin-bottom: 15px; border: 2px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 25px rgba(0,0,0,0.6); margin-bottom: 20px; border: 3px solid rgba(255,255,255,0.2);
         }
         .user-name { font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; text-shadow: 0 2px 4px black; }
         
@@ -56,6 +57,20 @@
             width: 32px; height: 32px; border-radius: 50%;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 1.2rem; z-index: 10;
+        }
+
+        /* NEW: WRONG PASSWORD POPUP */
+        #error-popup {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 320px; background: #1c1c1e; border: 1px solid var(--red);
+            border-radius: 14px; padding: 25px; text-align: center;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9); z-index: 6000;
+            display: none; animation: shake 0.4s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+            25% { transform: translate(-50%, -50%) translateX(-10px); }
+            75% { transform: translate(-50%, -50%) translateX(10px); }
         }
 
         /* --- 2. SETUP SCREEN --- */
@@ -121,14 +136,13 @@
             max-height: 85vh;
         }
         
-        /* FIXED: Mac Style Title Bar */
+        /* Mac Style Title Bar */
         .title-bar {
             background: #2d2d2d; padding: 0 15px; height: 38px;
             display: flex; align-items: center; justify-content: space-between;
             cursor: grab; border-bottom: 1px solid #333;
         }
         .title-bar:active { cursor: grabbing; }
-        
         .window-title { font-size: 0.85rem; font-weight: 500; opacity: 0.8; }
         
         /* THE 3 DOTS (Traffic Lights) */
@@ -175,6 +189,16 @@
         </div>
         
         <div style="margin-top: 15px; font-size: 0.8rem; opacity: 0.7;">Hint: First message (small letters)</div>
+
+        <div id="error-popup">
+            <div style="font-size: 40px; margin-bottom: 10px;">😤</div>
+            <h3 style="color: #FF453A; margin-bottom: 10px;">Access Denied!</h3>
+            <p style="font-size: 0.95rem; line-height: 1.5; color: #ccc; margin-bottom: 20px;">
+                You don't know anything?<br>
+                You don't deserve to move forward.
+            </p>
+            <button class="btn-primary" onclick="closeError()" style="background: #333; border: 1px solid #555;">Try Again</button>
+        </div>
     </div>
 
     <div id="setup-screen">
@@ -329,7 +353,7 @@
                     <div class="control-btn max"></div>
                 </div>
             </div>
-            <img src="cover.png" class="cover-art">
+            <img src="cover.jpg" class="cover-art">
             <div class="player-ui">
                 <h3 style="margin-bottom:5px;">Safar (The Journey)</h3>
                 <p style="font-size:12px; opacity:0.7; margin-bottom:15px;">Artist: Us</p>
@@ -352,15 +376,21 @@
     <script>
         // --- LOGIC ---
 
-        // 1. Password Logic (Go Button + Enter)
+        // 1. Password Logic (Popup on Error)
         function checkPass() {
             const passInput = document.getElementById('password');
             if (passInput.value.toLowerCase().trim() === "let's get crazy together") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('setup-screen').style.display = 'flex';
             } else {
-                passInput.style.border = "2px solid red";
+                // Wrong Password -> Show Popup
+                document.getElementById('error-popup').style.display = 'block';
+                passInput.value = "";
             }
+        }
+        
+        function closeError() {
+            document.getElementById('error-popup').style.display = 'none';
         }
 
         const passInput = document.getElementById('password');
@@ -451,6 +481,3 @@
     </script>
 </body>
 </html>
-
-
-
